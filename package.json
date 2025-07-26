@@ -12,7 +12,9 @@
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^12.6.0",
-		"astro": "^5.12.3"
+		"@auth/core": "^0.37.4",
+		"astro": "^5.12.3",
+		"auth-astro": "^4.2.0"
 	},
 	"devDependencies": {
 		"@types/node": "^24.1.0",
