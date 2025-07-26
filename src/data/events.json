@@ -1,0 +1,54 @@
+[
+	{
+		"slug": "atlantus-cod",
+		"title": "Call of Duty Mobile",
+		"dateStart": "2025-11-01T00:00:00.000Z",
+		"dateEnd": "2025-11-01T04:00:00.000Z",
+		"price": "50",
+		"players": 4,
+		"kind": "atlantus",
+		"tags": ["multiplayer", "cash prize", "action"],
+		"description": "Get ready to dive into another world with our VR event! Experience the coolest virtual worlds, epic games, and mind-blowing tech that’ll leave you amazed. Whether you're into exploring, gaming, or just curious about what the future looks like, this is your chance to try it all.",
+		"rules": ["Rule 1", "Rule 2", "Rule 3"],
+		"image": "https://image.url"
+	},
+	{
+		"slug": "dexteria-cod",
+		"title": "Call of Duty Mobile",
+		"dateStart": "2025-11-01T00:00:00.000Z",
+		"dateEnd": "2025-11-01T04:00:00.000Z",
+		"kind": "dexteria",
+		"price": "50",
+		"players": 4,
+		"tags": ["multiplayer", "cash prize", "action"],
+		"description": "Get ready to dive into another world with our VR event! Experience the coolest virtual worlds, epic games, and mind-blowing tech that’ll leave you amazed. Whether you're into exploring, gaming, or just curious about what the future looks like, this is your chance to try it all.",
+		"rules": ["Rule 1", "Rule 2", "Rule 3"],
+		"image": "https://image.url"
+	},
+	{
+		"slug": "atlantus-fortnite",
+		"title": "Fortnite Battle Royale",
+		"dateStart": "2025-11-01T00:00:00.000Z",
+		"dateEnd": "2025-11-01T04:00:00.000Z",
+		"price": "100",
+		"players": 3,
+		"kind": "atlantus",
+		"tags": ["multiplayer", "battle royale", "strategy"],
+		"description": "Jump from the Battle Bus and fight to be the last one standing in Fortnite’s colorful and fast-paced battle royale. Build structures, shoot, and survive in dynamic maps with friends or solo.",
+		"rules": ["Team size: 3 players", "No cheating or exploits", "Standard Battle Royale mode"],
+		"image": "https://example.com/images/fortnite.jpg"
+	},
+	{
+		"slug": "dexteria-fortnite",
+		"title": "Fortnite Battle Royale",
+		"dateStart": "2025-11-01T00:00:00.000Z",
+		"dateEnd": "2025-11-01T04:00:00.000Z",
+		"kind": "dexteria",
+		"price": "100",
+		"players": 3,
+		"tags": ["multiplayer", "battle royale", "strategy"],
+		"description": "Jump from the Battle Bus and fight to be the last one standing in Fortnite’s colorful and fast-paced battle royale. Build structures, shoot, and survive in dynamic maps with friends or solo.",
+		"rules": ["Team size: 3 players", "No cheating or exploits", "Standard Battle Royale mode"],
+		"image": "https://example.com/images/fortnite.jpg"
+	}
+]

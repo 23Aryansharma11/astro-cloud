@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import { turso } from '../../turso';
+import { getSession } from 'auth-astro/server';
+const events = await getCollection('events');
+
+const { rows } = await turso.execute('SELECT * FROM userEvents');
+
+const registered = (eventSlug: string): number => {
+	const eventUsers = rows.filter((r) => r.event === eventSlug);
+	return eventUsers.length;
+};
+
+const session = await getSession(Astro.request);
+//form handler
+if (Astro.request.method === 'POST') {
+	try {
+		const data = await Astro.request.formData();
+		const eventSlug = data.get('event')?.toString();
+		const userId = session?.user?.email || 'foobar@gmail.com';
+
+		if (eventSlug) {
+			// Do something with the data
+			await turso.execute({
+				sql: `INSERT INTO userEvents (user_id, event, is_verified, payment_id) 
+        VALUES (?, ?, ?, ?) 
+        ON CONFLICT(user_id, event) DO NOTHING`,
+				args: [userId, eventSlug, 0, null],
+			});
+		}
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error(error.message);
+		}
+	}
+}
+---
+
+<h1>Events</h1>
+<ul>
+	{
+		events.map((event) => (
+			<li>
+				<h2>{event.data.title}</h2>
+				{registered(event.data.slug) < event.data.players && (
+					<div>
+						Remaining Spots: {event.data.players - registered(event.data.slug)}
+						<form method="POST">
+							<input type="hidden" name="event" value={event.data.slug} />
+							<button>Register</button>
+						</form>
+					</div>
+				)}
+			</li>
+		))
+	}
+</ul>
+
+<ul>
+	{rows.map((userEvent) => <li>{userEvent.event}</li>)}
+</ul>
