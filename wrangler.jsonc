@@ -27,8 +27,7 @@
 	"kv_namespaces": [
 		{
 			"binding": "ASTRO_CLOUD",
-			"id": "52241420b59843d6ae2b88f418e48c9b",
-			"experimental_remote": true
+			"id": "52241420b59843d6ae2b88f418e48c9b"
 		}
 	]
 
