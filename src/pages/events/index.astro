@@ -12,14 +12,14 @@ const registered = (eventSlug: string): number => {
 };
 
 const session = await getSession(Astro.request);
+const userId = session?.user?.email;
 //form handler
 if (Astro.request.method === 'POST') {
 	try {
 		const data = await Astro.request.formData();
 		const eventSlug = data.get('event')?.toString();
-		const userId = session?.user?.email || 'foobar@gmail.com';
 
-		if (eventSlug) {
+		if (eventSlug && userId) {
 			// Do something with the data
 			await turso.execute({
 				sql: `INSERT INTO userEvents (user_id, event, is_verified, payment_id) 
@@ -42,7 +42,7 @@ if (Astro.request.method === 'POST') {
 		events.map((event) => (
 			<li>
 				<h2>{event.data.title}</h2>
-				{registered(event.data.slug) < event.data.players && (
+				{registered(event.data.slug) < event.data.players && userId && (
 					<div>
 						Remaining Spots: {event.data.players - registered(event.data.slug)}
 						<form method="POST">
