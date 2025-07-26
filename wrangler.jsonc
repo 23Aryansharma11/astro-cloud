@@ -5,8 +5,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "astro-cloud",
-	"main": "./dist/_worker.js/index.js",
-	"pages_build_output_dir": "./dist",
+	"pages_build_output_dir": "dist",
 	"compatibility_date": "2025-07-26",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"observability": {
