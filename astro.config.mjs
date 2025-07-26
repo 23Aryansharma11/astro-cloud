@@ -5,11 +5,12 @@ import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true
-    },
+	output: 'server',
+	adapter: cloudflare({
+		platformProxy: {
+			enabled: true,
+		},
 
-    imageService: "cloudflare"
-  })
+		imageService: 'cloudflare',
+	}),
 });
