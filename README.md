@@ -1,60 +1,157 @@
-# Astro Starter Kit: Basics
+# Event Page
+
+## .env
+
+The project expects an .env file with the following vars:
+
+```
+
+GOOGLE_CLIENT_ID
+
+GOOGLE_CLIENT_SECRET
+
+AUTH_SECRET
+
+AUTH_TRUST_HOST
+
+TURSO_DATABASE_URL
+
+TURSO_AUTH_TOKEN
+
+```
+
+## Tools
+
+### Astro
+
+[Astro](https://docs.astro.build/en/getting-started/) is a JavaScript web framework optimized for building fast, content-driven websites. It is often used as a static site generator, but it also has some limited serverside functionality that we will take advantage of here.
+
+### Auth.js (via auth-astro)
+
+[Auth.js](https://authjs.dev/) is a free and open-source authentication adapter. We're using the Astro plugin [auth-astro](https://github.com/nowaythatworked/auth-astro).
+
+## Infrastructure
+
+### Cloudflare
+
+One of the benefits of Astro is that there are adapters that let it run its server-side functionality on edge environments like Cloudflare Pages/Workers. A fringe benefit here is that this is basically free to host. To create a Cloudflare account sign up [here](https://dash.cloudflare.com).
+
+Once you have created an account, initialize the local cli in your project root by runing:
 
 ```sh
-npm create astro@latest -- --template basics
+
+npx  wrangler  login
+
 ```
 
-<!-- ASTRO:REMOVE:START. -->
+This will open a Cloudflare login screen in your default browser, authenticate in your browser.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+#### Cloudflare Pages - Used for Astro Deployment
 
-<!-- ASTRO:REMOVE:END -->
+##### Setup
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- Log in to Cloudflare, and go to: Compute (Workers) -> Workers & Pages.
 
-<!-- ASTRO:REMOVE:START -->
+- Click the blue "Create" button, Select the "Pages" tab.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- Select the "Import an existing Git repository" option.
 
-<!-- ASTRO:REMOVE:END -->
+- Select GitHub and allow the Cloudflare App access to the repo in GitHub.
 
-## 🚀 Project Structure
+- Navigate back to Cloudflare, and select the repo
 
-Inside of your Astro project, you'll see the following folders and files:
+- select "Astro" as the Framework
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+- add `npm run build` as the build command
+
+- Specify `./dist` as the output directory
+
+#### KV - Used for Astro Session
+
+Cloudflare KV is an arbitrary key-value store. We're using this in Astro to power serverside sessions for remembering if a user is logged-in.
+
+##### Setup
+
+1. Create the KV Store via the Command Line
+
+From the command line in your project, run:
+
+```sh
+
+npx  wrangler  kv  namespace  create  "SESSION"
+
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+2. Add the namespace to your project.
 
-## 🧞 Commands
+Follow the propmt to add the kv namespace to your wrangler.jsonc file.
 
-All commands are run from the root of the project, from a terminal:
+Ensure the namespace is entered in your `/src/env.d.ts` file:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```ts
+type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
 
-## 👀 Want to learn more?
+declare namespace App {
+	interface Locals extends Runtime {}
+}
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+interface Env {
+	SESSION: KVNamespace;
+}
+```
+
+3. You may need to manually bind the KV store to your Pages project.
+
+- Log in to Cloudflare, and go to: Compute (Workers) -> Workers & Pages. Select your project
+
+- Click the "Settings" tab, and scroll down to "Bindings"
+
+- Click the +Add
+
+- Select the "SESSION" KV store
+
+### Google OAuth2 - Used for Authentication
+
+We're using Google OAuth2 to facilitate Authentication.
+
+#### Setup
+
+Follow Google's [instructions](https://developers.google.com/identity/protocols/oauth2) to create credentials, and configure a consent screen.
+
+You will need to copy the `clientID` and `secret` of the credential you create.
+
+Add these as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in your `.env` file and as vars in your Cloudflare Pages project.
+
+You will need to configure Authorized JavaScript origins
+
+- http://localhost:4321 (local dev - vite)
+
+- http://localhost:8787 (local dev - wrangler)
+
+- https://YOUR_PROJECT_NAME.pages.dev (the live url of your production Cloudflare Pages app)
+
+You will need to configure the following Authorized redirect URIs
+
+- http://localhost:4321/api/auth/callback/google (local dev - vite)
+
+- http://localhost:8787/api/auth/callback/google (local dev - wrangler)
+
+- https://YOUR_PROJECT_NAME.pages.dev/api/auth/callback/google (the live url of your production Cloudflare Pages app)
+
+### Turso - Used to Store Some Persistent Data
+
+[Turso](https://turso.tech) is an SQLite hosting service. We're using Turso to store userEvent records (ie events a logged-in user has signed up for).
+
+#### Steup
+
+- Create a turso account, and [sign in](https://app.turso.tech/login).
+
+- Create a Database (Big white "Create Database" button.)
+
+- Find the db url and generate a token. Save these as `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in your `.env` file and as vars in your Cloudflare Pages project.
+
+- Go to the "Edit Data" Tab
+
+- Click the "SQL console" button
+
+- Create the db schema. Copy the SQL from `/src/tableConfig.sql`, paste, and "Run All"

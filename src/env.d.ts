@@ -6,4 +6,5 @@ declare namespace App {
 
 interface Env {
 	ASTRO_CLOUD: KVNamespace;
+	SESSION: KVNamespace;
 }

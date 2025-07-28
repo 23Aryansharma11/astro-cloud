@@ -5,7 +5,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "astro-cloud",
-	"pages_build_output_dir": "dist",
+	"pages_build_output_dir": "./dist",
 	"compatibility_date": "2025-07-26",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"observability": {
@@ -28,6 +28,10 @@
 		{
 			"binding": "ASTRO_CLOUD",
 			"id": "52241420b59843d6ae2b88f418e48c9b"
+		},
+		{
+			"binding": "SESSION",
+			"id": "0a79081aea0b4b03a0dd756bd0b76450"
 		}
 	]
 
